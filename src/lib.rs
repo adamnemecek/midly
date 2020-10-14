@@ -160,8 +160,8 @@ mod error {
             fn kind(&self) -> ErrorKind {
                 *self.inner.get_context()
             }
-            fn chain_ctx(self, ctx: ErrorKind) -> Error {
-                Error {
+            fn chain_ctx(self, ctx: ErrorKind) -> Self {
+                Self {
                     inner: Fail::context(self, ctx),
                 }
             }
@@ -176,8 +176,8 @@ mod error {
             }
         }
         impl From<ErrorKind> for Error {
-            fn from(kind: ErrorKind) -> Error {
-                Error {
+            fn from(kind: ErrorKind) -> Self {
+                Self {
                     inner: Context::new(kind),
                 }
             }
@@ -195,8 +195,8 @@ mod error {
             fn kind(&self) -> ErrorKind {
                 self.inner
             }
-            fn chain_ctx(self, ctx: ErrorKind) -> Error {
-                Error { inner: ctx }
+            fn chain_ctx(self, ctx: ErrorKind) -> Self {
+                Self { inner: ctx }
             }
         }
         impl From<ErrorKind> for Error {
@@ -279,9 +279,9 @@ mod error {
         /// Get the informative message on what exact part of the SMF format was not respected.
         pub fn message(&self) -> &'static str {
             match *self {
-                ErrorKind::Invalid(msg) => msg,
-                ErrorKind::Malformed(msg) => msg,
-                ErrorKind::Pedantic(msg) => msg,
+                Self::Invalid(msg) => msg,
+                Self::Malformed(msg) => msg,
+                Self::Pedantic(msg) => msg,
             }
         }
     }

@@ -253,9 +253,9 @@ impl<'a> Chunk<'a> {
     /// Interpret the chunk as a track.
     fn parse_into_track<T: TrackRepr<'a>>(chunk_parse_result: Result<Self>) -> Option<Result<T>> {
         match chunk_parse_result {
-            Ok(Chunk::Track(track)) => Some(T::read(track)),
+            Ok(Self::Track(track)) => Some(T::read(track)),
             //Read another header (?)
-            Ok(Chunk::Header(..)) => {
+            Ok(Self::Header(..)) => {
                 if cfg!(feature = "lenient") {
                     //Ignore duplicate header
                     None
