@@ -104,11 +104,15 @@ impl<'a, T: TrackRepr<'a>> Smf<'a, T> {
                 use rayon::prelude::*;
 
                 //Write out the tracks in parallel into several different buffers
-                let track_chunks = self.tracks.par_iter().map(|track| {
-                    let mut track_chunk = Vec::with_capacity(8*1024);
-                    Chunk::write_track(track, &mut track_chunk)?;
-                    Ok(track_chunk)
-                }).collect::<IoResult<Vec<_>>>()?;
+                let track_chunks = self
+                    .tracks
+                    .par_iter()
+                    .map(|track| {
+                        let mut track_chunk = Vec::with_capacity(8 * 1024);
+                        Chunk::write_track(track, &mut track_chunk)?;
+                        Ok(track_chunk)
+                    })
+                    .collect::<IoResult<Vec<_>>>()?;
 
                 //Write down the tracks sequentially and in order
                 for track_chunk in track_chunks {
@@ -247,9 +251,7 @@ impl<'a> Chunk<'a> {
     }
 
     /// Interpret the chunk as a track.
-    fn parse_into_track<T: TrackRepr<'a>>(
-        chunk_parse_result: Result<Self>,
-    ) -> Option<Result<T>> {
+    fn parse_into_track<T: TrackRepr<'a>>(chunk_parse_result: Result<Self>) -> Option<Result<T>> {
         match chunk_parse_result {
             Ok(Chunk::Track(track)) => Some(T::read(track)),
             //Read another header (?)

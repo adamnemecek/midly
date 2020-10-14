@@ -176,16 +176,16 @@ impl u28 {
         let int = self.as_int();
         let mut skipping = true;
         for i in (0..4).rev() {
-            let byte = ((int>>(i*7))&0x7F) as u8;
-            if skipping && byte==0 && i!=0 {
+            let byte = ((int >> (i * 7)) & 0x7F) as u8;
+            if skipping && byte == 0 && i != 0 {
                 //Skip these leading zeros
-            }else{
+            } else {
                 //Write down this u7
-                skipping=false;
-                let byte = if i==0 {
+                skipping = false;
+                let byte = if i == 0 {
                     //Last byte
                     byte
-                }else{
+                } else {
                     //Leading byte
                     byte | 0x80
                 };

@@ -21,10 +21,7 @@ impl<'a> Event<'a> {
     /// The second return value is this very same event, but parsed.
     ///
     /// The `raw` slice will be modified and have this prefix removed.
-    pub fn read(
-        raw: &mut &'a [u8],
-        running_status: &mut Option<u8>,
-    ) -> Result<(&'a [u8], Self)> {
+    pub fn read(raw: &mut &'a [u8], running_status: &mut Option<u8>) -> Result<(&'a [u8], Self)> {
         let delta = u28::read_u7(raw).context(err_invalid("failed to read event deltatime"))?;
         let (raw, kind) =
             EventKind::read(raw, running_status).context(err_invalid("failed to parse event"))?;
@@ -72,10 +69,7 @@ impl<'a> EventKind<'a> {
     /// In case of success the byteslice is advanced to the next event, and the running status
     /// might be changed to a new status.
     /// In case of error no changes are made to these values.
-    pub fn parse(
-        raw: &mut &'a [u8],
-        running_status: &mut Option<u8>,
-    ) -> Result<(&'a [u8], Self)> {
+    pub fn parse(raw: &mut &'a [u8], running_status: &mut Option<u8>) -> Result<(&'a [u8], Self)> {
         let (old_raw, old_rs) = (*raw, *running_status);
         let maybe_ev = Self::read(raw, running_status);
         if let Err(_) = maybe_ev {
@@ -85,10 +79,7 @@ impl<'a> EventKind<'a> {
         maybe_ev
     }
 
-    fn read(
-        raw: &mut &'a [u8],
-        running_status: &mut Option<u8>,
-    ) -> Result<(&'a [u8], Self)> {
+    fn read(raw: &mut &'a [u8], running_status: &mut Option<u8>) -> Result<(&'a [u8], Self)> {
         //Keep the beggining of the old slice
         let old_slice = *raw;
         //Read status
